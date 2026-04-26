@@ -29,3 +29,7 @@ decrypt.go
 *.notes
 .credentials/
 *test.go
+
+credentials/
+docs/
+bin/
