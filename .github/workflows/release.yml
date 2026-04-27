@@ -29,9 +29,6 @@ jobs:
           path: bin
           key: ${{ runner.os }}-tools-${{ hashFiles('scripts/*.sh') }}
 
-      - name: 🔧 Make scripts executable
-        run: chmod +x scripts/*.sh
-
       - name: 🚀 Run release script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
