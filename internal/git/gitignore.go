@@ -8,7 +8,7 @@ import (
 // AddIgnoreLine ensures the given path is listed in .gitignore
 func AddIgnoreLine() (bool, error) {
 	const gitignorePath = ".gitignore"
-	var line string = ".credentials/*.key"
+	var line = ".credentials/*.key"
 	line = strings.TrimSpace(line)
 
 	if _, err := os.Stat(gitignorePath); os.IsNotExist(err) {

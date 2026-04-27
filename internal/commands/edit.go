@@ -44,7 +44,7 @@ func SaveUpdatedCredentials(env, content string, id *age.X25519Identity, filesys
 
 func Editor(env string, filesystem afero.Fs) (string, bool, error) {
 
-	var edited bool = false
+	var edited = false
 
 	keyName := environment.ResolveEnv(env, true)
 	encName := environment.ResolveEnv(env, false)
@@ -136,7 +136,6 @@ func Editor(env string, filesystem afero.Fs) (string, bool, error) {
 			app.Stop()
 			return nil
 		default:
-			panic("unhandled default case")
 		}
 		return event
 	})

@@ -2,11 +2,13 @@ package crypto
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"strings"
 
 	"filippo.io/age"
+	"github.com/skulos/go-credentials/internal/colours"
 	"github.com/spf13/afero"
 )
 
@@ -24,7 +26,7 @@ func EncryptToFile(path string, filesystem afero.Fs, recipient age.Recipient, da
 	defer func(out afero.File) {
 		err := out.Close()
 		if err != nil {
-			// handle
+			fmt.Printf("failed to close encrypted file: %s", colours.WarnColor(err))
 		}
 	}(out)
 
@@ -48,7 +50,7 @@ func DecryptFile(path string, filesystem afero.Fs, identity *age.X25519Identity)
 	defer func(in afero.File) {
 		err := in.Close()
 		if err != nil {
-
+			fmt.Printf("failed to close decrypted file: %s", colours.WarnColor(err))
 		}
 	}(in)
 
@@ -76,7 +78,7 @@ func DecryptFromFile(path string, identity age.Identity) ([]byte, error) {
 	defer func(in *os.File) {
 		err := in.Close()
 		if err != nil {
-			// handle error
+			fmt.Printf("failed to close decrypted file: %s", colours.WarnColor(err))
 		}
 	}(in)
 

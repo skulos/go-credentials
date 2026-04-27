@@ -64,7 +64,7 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 
 	yamlBytes, err := yaml.Marshal(data)
 	if err != nil {
-		return "", encPath, fmt.Errorf("Failed to format YAML: %w", err)
+		return "", encPath, fmt.Errorf("failed to format YAML: %w", err)
 	}
 
 	if colouredOutput {
@@ -75,9 +75,9 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 				parts := strings.SplitN(line, ":", 2)
 				keyPart := colours.KeyColor(parts[0])
 				valPart := colours.ValueColor(parts[1])
-				b.WriteString(fmt.Sprintf("%s:%s\n", keyPart, valPart))
+				_, _ = fmt.Fprintf(&b, "%s:%s\n", keyPart, valPart)
 			} else {
-				b.WriteString(line + "\n")
+				_, _ = fmt.Fprintf(&b, "%s\n", line)
 			}
 		}
 		return b.String(), encPath, nil
