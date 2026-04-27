@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 "$ROOT_DIR/scripts/install_goreleaser.sh"
 
-VERSION="v1.26.2"
+VERSION="v2.15.4"
 GORELEASER="$ROOT_DIR/bin/goreleaser_${VERSION}/goreleaser"
 
 ARGS=("release" "--clean")
