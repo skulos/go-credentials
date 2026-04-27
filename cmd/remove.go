@@ -39,7 +39,7 @@ var removeCmd = &cobra.Command{
 			}
 		}
 
-		return commands.RemoveCredential(env, addKey)
+		return commands.RemoveCredential(env, addKey, filesystem)
 	},
 }
 

@@ -14,7 +14,9 @@ func ResolveEnv(cliFlag string, keyFile bool) string {
 
 	if keyFile {
 		return DEFUALT_KEY_NAME
-	} else {
-		return DEFAULT_ENCRYPTED_FILE
 	}
+
+	return DEFAULT_ENCRYPTED_FILE
 }
+
+//func

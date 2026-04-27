@@ -37,7 +37,7 @@ var updateCmd = &cobra.Command{
 			}
 		}
 
-		return commands.UpdateCredentials(env, addKey, addValue)
+		return commands.UpdateCredentials(env, addKey, addValue, filesystem)
 	},
 }
 

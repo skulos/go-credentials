@@ -6,9 +6,10 @@ import (
 	"github.com/skulos/go-credentials/internal/crypto"
 	"github.com/skulos/go-credentials/internal/environment"
 	"github.com/skulos/go-credentials/internal/git"
+	"github.com/spf13/afero"
 )
 
-func SetupEnvironment(env string) (string, string, bool, error) {
+func SetupEnvironment(env string, fileSystem afero.Fs) (string, string, bool, error) {
 
 	// if err := gitignore.AddIgnoreLine(keyPath); err != nil {
 	// 	fmt.Println("⚠️  Could not update .gitignore for key:", err)
@@ -24,7 +25,7 @@ func SetupEnvironment(env string) (string, string, bool, error) {
 	keyPath := fmt.Sprintf("%s/%s", keyDir, keyName)
 	encPath := fmt.Sprintf("%s/%s.yml.enc", keyDir, encName)
 
-	if crypto.FileExists(keyPath) {
+	if crypto.FileExists(keyPath, fileSystem) {
 		return keyPath, encPath, false, fmt.Errorf("🔒 Master key already exists at %s", keyPath)
 	}
 
@@ -33,17 +34,17 @@ func SetupEnvironment(env string) (string, string, bool, error) {
 		return keyPath, encPath, false, err
 	}
 
-	if err := crypto.CreateDirIfNotExists(keyDir); err != nil {
+	if err := crypto.CreateDirIfNotExists(keyDir, fileSystem); err != nil {
 		return keyPath, encPath, false, err
 	}
 
-	if err := crypto.WriteFileSecure(keyPath, []byte(identity.String())); err != nil {
+	if err := crypto.WriteFileSecure(keyPath, fileSystem, []byte(identity.String())); err != nil {
 		return keyPath, encPath, false, err
 	}
 
 	recipient := identity.Recipient()
 
-	if err := crypto.EncryptToFile(encPath, recipient, crypto.DefaultYaml()); err != nil {
+	if err := crypto.EncryptToFile(encPath, fileSystem, recipient, crypto.DefaultYaml()); err != nil {
 		return keyPath, encPath, false, fmt.Errorf("failed to create encrypted YAML: %w", err)
 	}
 

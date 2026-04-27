@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"filippo.io/age"
+	"github.com/spf13/afero"
 )
 
 // GenerateIdentity generates a new X25519 identity.
@@ -15,12 +16,17 @@ func GenerateIdentity() (*age.X25519Identity, error) {
 }
 
 // EncryptToFile encrypts the plaintext with the recipient and writes it to the file
-func EncryptToFile(path string, recipient age.Recipient, data []byte) error {
-	out, err := os.Create(path)
+func EncryptToFile(path string, filesystem afero.Fs, recipient age.Recipient, data []byte) error {
+	out, err := filesystem.Create(path)
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer func(out afero.File) {
+		err := out.Close()
+		if err != nil {
+			// handle
+		}
+	}(out)
 
 	encWriter, err := age.Encrypt(out, recipient)
 	if err != nil {
@@ -34,19 +40,24 @@ func EncryptToFile(path string, recipient age.Recipient, data []byte) error {
 	return encWriter.Close()
 }
 
-func DecryptFile(path string, identity *age.X25519Identity) ([]byte, error) {
-	in, err := os.Open(path)
+func DecryptFile(path string, filesystem afero.Fs, identity *age.X25519Identity) ([]byte, error) {
+	in, err := filesystem.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	defer in.Close()
+	defer func(in afero.File) {
+		err := in.Close()
+		if err != nil {
+
+		}
+	}(in)
 
 	r, err := age.Decrypt(in, identity)
 	if err != nil {
 		return nil, err
 	}
 
-	return io.ReadAll(r)
+	return afero.ReadAll(r)
 }
 
 func ParseIdentity(s string) (*age.X25519Identity, error) {
@@ -62,7 +73,12 @@ func DecryptFromFile(path string, identity age.Identity) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer in.Close()
+	defer func(in *os.File) {
+		err := in.Close()
+		if err != nil {
+			// handle error
+		}
+	}(in)
 
 	r, err := age.Decrypt(in, identity)
 	if err != nil {

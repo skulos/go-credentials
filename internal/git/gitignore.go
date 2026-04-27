@@ -26,7 +26,12 @@ func AddIgnoreLine() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		defer f.Close()
+		defer func(f *os.File) {
+			err := f.Close()
+			if err != nil {
+				// TODO: do something or ignore
+			}
+		}(f)
 		_, err = f.WriteString(line + "\n")
 		return false, err
 	}

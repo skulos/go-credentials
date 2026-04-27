@@ -18,22 +18,22 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 
 	keyBytes, err := os.ReadFile(keyPath)
 	if err != nil {
-		return "", encPath, fmt.Errorf("Failed to read private key: %s", colours.ErrorColor(err))
+		return "", encPath, fmt.Errorf("failed to read private key: %s", colours.ErrorColor(err))
 	}
 
 	identity, err := crypto.ParseIdentity(string(keyBytes))
 	if err != nil {
-		return "", encPath, fmt.Errorf("Failed to parse identity: %s", colours.ErrorColor(err))
+		return "", encPath, fmt.Errorf("failed to parse identity: %s", colours.ErrorColor(err))
 	}
 
 	plaintext, err := crypto.DecryptFromFile(encPath, identity)
 	if err != nil {
-		return "", encPath, fmt.Errorf("Failed to decrypt credentials: %s", colours.ErrorColor(err))
+		return "", encPath, fmt.Errorf("failed to decrypt credentials: %s", colours.ErrorColor(err))
 	}
 
 	var data map[string]interface{}
 	if err := yaml.Unmarshal(plaintext, &data); err != nil {
-		return "", encPath, fmt.Errorf("Failed to parse YAML: %s", colours.ErrorColor(err))
+		return "", encPath, fmt.Errorf("failed to parse YAML: %s", colours.ErrorColor(err))
 	}
 
 	// Show only the specific key if requested
@@ -41,9 +41,9 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 		value, found := traverseKey(data, specificKey)
 		if !found {
 			if colouredOutput {
-				return "", encPath, fmt.Errorf("Key %s not found in credentials", colours.ErrorColor(specificKey))
+				return "", encPath, fmt.Errorf("key %s not found in credentials", colours.ErrorColor(specificKey))
 			}
-			return "", encPath, fmt.Errorf("Key %s not found in credentials", specificKey)
+			return "", encPath, fmt.Errorf("key %s not found in credentials", specificKey)
 		}
 		if colouredOutput {
 			return fmt.Sprintf("%s : %v\n", colours.KeyColor(specificKey), colours.ValueColor(value)), encPath, nil

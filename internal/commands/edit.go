@@ -11,11 +11,12 @@ import (
 	"github.com/rivo/tview"
 	"github.com/skulos/go-credentials/internal/crypto"
 	"github.com/skulos/go-credentials/internal/environment"
+	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
 
 // SaveUpdatedCredentials takes the updated credentials map and saves it to a YAML file
-func SaveUpdatedCredentials(env, content string, id *age.X25519Identity) error {
+func SaveUpdatedCredentials(env, content string, id *age.X25519Identity, filesystem afero.Fs) error {
 
 	encName := environment.ResolveEnv(env, false)
 	encPath := fmt.Sprintf(".credentials/%s.yml.enc", encName)
@@ -34,14 +35,14 @@ func SaveUpdatedCredentials(env, content string, id *age.X25519Identity) error {
 
 	// Encrypt and overwrite the encrypted file
 	recipient := id.Recipient()
-	if err := crypto.EncryptToFile(encPath, recipient, newYAML); err != nil {
+	if err := crypto.EncryptToFile(encPath, filesystem, recipient, newYAML); err != nil {
 		return fmt.Errorf("failed to encrypt and save updated credentials: %w", err)
 	}
 
 	return nil
 }
 
-func Editor(env string) (string, bool, error) {
+func Editor(env string, filesystem afero.Fs) (string, bool, error) {
 
 	var edited bool = false
 
@@ -124,7 +125,7 @@ func Editor(env string) (string, bool, error) {
 		switch event.Key() {
 		case tcell.KeyCtrlS:
 			editedContent := textArea.GetText()
-			err := SaveUpdatedCredentials(env, editedContent, identity)
+			err := SaveUpdatedCredentials(env, editedContent, identity, filesystem)
 			if err != nil {
 				log.Fatalf("Failed to save updated credentials: %v", err)
 			}
@@ -134,6 +135,8 @@ func Editor(env string) (string, bool, error) {
 		case tcell.KeyCtrlC:
 			app.Stop()
 			return nil
+		default:
+			panic("unhandled default case")
 		}
 		return event
 	})

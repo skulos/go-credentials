@@ -11,7 +11,7 @@ var addCmd = &cobra.Command{
 	GroupID: "management",
 	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return commands.AddCredential(env, addKey, addValue, force)
+		return commands.AddCredential(env, addKey, addValue, force, filesystem)
 	},
 }
 

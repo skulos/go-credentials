@@ -8,10 +8,11 @@ import (
 
 	"github.com/skulos/go-credentials/internal/crypto"
 	"github.com/skulos/go-credentials/internal/environment"
+	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
 
-func RemoveCredential(env, key string) error {
+func RemoveCredential(env, key string, filesystem afero.Fs) error {
 	keyName := environment.ResolveEnv(env, true)
 	encName := environment.ResolveEnv(env, false)
 
@@ -53,7 +54,7 @@ func RemoveCredential(env, key string) error {
 	}
 
 	recipient := identity.Recipient()
-	if err := crypto.EncryptToFile(encPath, recipient, updatedYAML); err != nil {
+	if err := crypto.EncryptToFile(encPath, filesystem, recipient, updatedYAML); err != nil {
 		return fmt.Errorf("failed to re-encrypt updated credentials: %w", err)
 	}
 

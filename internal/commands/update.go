@@ -8,10 +8,11 @@ import (
 
 	"github.com/skulos/go-credentials/internal/crypto"
 	"github.com/skulos/go-credentials/internal/environment"
+	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
 
-func UpdateCredentials(env, key, value string) error {
+func UpdateCredentials(env, key, value string, filesystem afero.Fs) error {
 
 	keyName := environment.ResolveEnv(env, true)
 	encName := environment.ResolveEnv(env, false)
@@ -31,7 +32,7 @@ func UpdateCredentials(env, key, value string) error {
 
 	// Decrypt the YAML file
 	var data map[string]interface{}
-	plaintext, err := crypto.DecryptFile(encPath, identity)
+	plaintext, err := crypto.DecryptFile(encPath, filesystem, identity)
 	if err != nil {
 		// If file doesn't exist or decryption fails, start with empty data
 		fmt.Println("⚠️  No existing credentials found; creating a new encrypted file.")
@@ -56,7 +57,7 @@ func UpdateCredentials(env, key, value string) error {
 		return fmt.Errorf("failed to marshal updated credentials: %w", err)
 	}
 
-	if err := crypto.EncryptToFile(encPath, identity.Recipient(), updated); err != nil {
+	if err := crypto.EncryptToFile(encPath, filesystem, identity.Recipient(), updated); err != nil {
 		return fmt.Errorf("failed to encrypt updated credentials: %w", err)
 	}
 

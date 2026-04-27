@@ -7,10 +7,11 @@ import (
 
 	"github.com/skulos/go-credentials/internal/crypto"
 	"github.com/skulos/go-credentials/internal/environment"
+	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
 
-func AddCredential(env, key, value string, force bool) error {
+func AddCredential(env, key, value string, force bool, filesystem afero.Fs) error {
 	keyName := environment.ResolveEnv(env, true)
 	encName := environment.ResolveEnv(env, false)
 	keyPath := fmt.Sprintf(".credentials/%s.key", keyName)
@@ -28,7 +29,7 @@ func AddCredential(env, key, value string, force bool) error {
 
 	// Decrypt the YAML file
 	var data map[string]interface{}
-	plaintext, err := crypto.DecryptFile(encPath, identity)
+	plaintext, err := crypto.DecryptFile(encPath, filesystem, identity)
 	if err != nil {
 		// If file doesn't exist or decryption fails, start with empty data
 		fmt.Println("⚠️  No existing credentials found; creating a new encrypted file.")
@@ -77,7 +78,7 @@ func AddCredential(env, key, value string, force bool) error {
 		return fmt.Errorf("failed to marshal credentials: %w", err)
 	}
 	recipient := identity.Recipient()
-	if err := crypto.EncryptToFile(encPath, recipient, newYAML); err != nil {
+	if err := crypto.EncryptToFile(encPath, filesystem, recipient, newYAML); err != nil {
 		return fmt.Errorf("failed to encrypt credentials: %w", err)
 	}
 

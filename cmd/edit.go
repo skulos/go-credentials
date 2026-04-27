@@ -13,7 +13,7 @@ var editCmd = &cobra.Command{
 	GroupID: "core",
 	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		encryptedFile, edited, err := commands.Editor(env)
+		encryptedFile, edited, err := commands.Editor(env, filesystem)
 		if err != nil {
 			return fmt.Errorf("failed to edit credentials: %w", err)
 		}
