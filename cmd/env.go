@@ -11,7 +11,7 @@ import (
 var envCmd = &cobra.Command{
 	Use:   "env",
 	Short: "Print environment variables and their uses",
-	Args:  NoArgs,
+	Args:  noArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		printEnvVars()
 	},

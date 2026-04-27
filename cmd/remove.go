@@ -14,7 +14,7 @@ var removeCmd = &cobra.Command{
 	Use:     "remove",
 	Short:   "Remove a key-value pair from the credentials store",
 	GroupID: "management",
-	Args:    NoArgs,
+	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Fetch the existing value
 		exists, val, err := commands.PeekCredential(env, addKey)
@@ -47,7 +47,7 @@ func init() {
 	removeCmd.Flags().StringVarP(&addKey, "key", "k", "", "Credential key to remove (required)")
 	removeCmd.Flags().BoolVarP(&force, "force", "f", false, "Force removal without confirmation")
 
-	removeCmd.MarkFlagRequired("key")
+	_ = removeCmd.MarkFlagRequired("key")
 
 	rootCmd.AddCommand(removeCmd)
 }

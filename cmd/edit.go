@@ -11,7 +11,7 @@ var editCmd = &cobra.Command{
 	Use:     "edit",
 	Short:   "Edit the credentials store for an environment",
 	GroupID: "core",
-	Args:    NoArgs,
+	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		encryptedFile, edited, err := commands.Editor(env)
 		if err != nil {

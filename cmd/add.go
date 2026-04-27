@@ -9,7 +9,7 @@ var addCmd = &cobra.Command{
 	Use:     "add -k [key] -v [value]",
 	Short:   "Add a key-value pair into the encrypted credentials store",
 	GroupID: "management",
-	Args:    NoArgs,
+	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return commands.AddCredential(env, addKey, addValue, force)
 	},
@@ -20,8 +20,8 @@ func init() {
 	addCmd.Flags().StringVarP(&addValue, "value", "v", "", "Value for the key being added")
 	addCmd.Flags().BoolVarP(&force, "force", "f", false, "Force overwrite of existing key")
 
-	addCmd.MarkFlagRequired("key")
-	addCmd.MarkFlagRequired("value")
+	_ = addCmd.MarkFlagRequired("key")
+	_ = addCmd.MarkFlagRequired("value")
 
 	rootCmd.AddCommand(addCmd)
 }

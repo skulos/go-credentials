@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -23,10 +24,13 @@ var (
 	key string
 
 	// Filesystem
-	filesystem = afero.NewOsFs()
+	filesystem afero.Fs
+
+	// Bootstrap Sync
+	boot sync.Once
 )
 
-var NoArgs = func(cmd *cobra.Command, args []string) error {
+var noArgs = func(cmd *cobra.Command, args []string) error {
 	if len(args) > 0 {
 		argList := strings.Join(args, " ")
 		// _ = cmd.Usage()
@@ -46,20 +50,33 @@ var rootCmd = &cobra.Command{
 	SilenceErrors: true,
 }
 
+func bootstrap() *cobra.Command {
+	boot.Do(func() {
+		filesystem = afero.NewOsFs()
+
+		rootCmd.PersistentFlags().StringVarP(&env, "env", "e", "development", "environment name (e.g. development, production, staging, test, ...)")
+		rootCmd.PersistentFlags().BoolVarP(&noColour, "no-color", "c", false, "disable colourized output")
+
+		rootCmd.AddGroup(&cobra.Group{
+			ID:    "management",
+			Title: "Management Commands:",
+		})
+
+		rootCmd.AddGroup(&cobra.Group{
+			ID:    "core",
+			Title: "Core Commands:",
+		})
+	})
+
+	return rootCmd
+}
+
+func GetEnv() string {
+	return env
+}
+
 func Execute() {
-	rootCmd.PersistentFlags().StringVarP(&env, "env", "e", "development", "environment name (e.g. development, production, staging, test, ...)")
-	rootCmd.PersistentFlags().BoolVarP(&noColour, "no-color", "c", false, "disable colourized output")
-
-	rootCmd.AddGroup(&cobra.Group{
-		ID:    "management",
-		Title: "Management Commands:",
-	})
-
-	rootCmd.AddGroup(&cobra.Group{
-		ID:    "core",
-		Title: "Core Commands:",
-	})
-
+	bootstrap()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

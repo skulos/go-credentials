@@ -14,7 +14,7 @@ var updateCmd = &cobra.Command{
 	Use:     "update",
 	Short:   "Update an existing key with a new value in the credentials store",
 	GroupID: "management",
-	Args:    NoArgs,
+	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Fetch existing value first
 		exists, oldValue, err := commands.PeekCredential(env, addKey)
@@ -47,8 +47,8 @@ func init() {
 	updateCmd.Flags().StringVar(&addValue, "value", "", "New value")
 	updateCmd.Flags().BoolVar(&force, "force", false, "Force update without confirmation")
 
-	updateCmd.MarkFlagRequired("key")
-	updateCmd.MarkFlagRequired("value")
+	_ = updateCmd.MarkFlagRequired("key")
+	_ = updateCmd.MarkFlagRequired("value")
 
 	rootCmd.AddCommand(updateCmd)
 }

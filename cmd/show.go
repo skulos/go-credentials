@@ -12,7 +12,7 @@ var showCmd = &cobra.Command{
 	Use:     "show",
 	Short:   "Show the credentials store for an environment",
 	GroupID: "core",
-	Args:    NoArgs,
+	Args:    noArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		keyName := environment.ResolveEnv(env, true)
 		encName := environment.ResolveEnv(env, false)

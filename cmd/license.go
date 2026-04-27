@@ -7,12 +7,12 @@ import (
 )
 
 // Hardcode the LICENSE text as a string
-const licenseText = "MIT License © 2025 Hendre Hayman <hendrehayman@gmail.com>"
+const licenseText = "MIT License © 2026 Hendre Hayman <hendrehayman@gmail.com>"
 
 var licenseCmd = &cobra.Command{
 	Use:   "license",
 	Short: "Display the software license",
-	Args:  NoArgs,
+	Args:  noArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(licenseText)
 	},

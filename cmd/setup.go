@@ -11,28 +11,28 @@ var setupCmd = &cobra.Command{
 	Use:     "setup",
 	Short:   "Initialize a master key and credentials store for an environment",
 	GroupID: "core",
-	Args:    cobra.NoArgs,
+	Args:    noArgs,
 	Aliases: []string{"init"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		keyPath, encPath, fileExists, err := commands.SetupEnvironment(env)
+		keyPath, encPath, fileExists, err := commands.SetupEnvironment(env, filesystem)
 
 		if err != nil {
 			fmt.Println(err)
 			return nil
-		} else {
-			fmt.Println("✅ Credential key generated and stored.")
-			fmt.Println("🗝️  Key stored at:", keyPath)
-			fmt.Println("📝 Encrypted YAML created at:", encPath)
-
-			if fileExists {
-				fmt.Println("📝 No .gitignore file")
-			} else {
-				fmt.Println("🔥 Added", keyPath, "to .gitignore")
-			}
-			fmt.Println("📢 Encryption and decryption will use this key.")
-			return nil
 		}
+
+		fmt.Println("✅ Credential key generated and stored.")
+		fmt.Println("🗝️  Key stored at:", keyPath)
+		fmt.Println("📝 Encrypted YAML created at:", encPath)
+
+		if fileExists {
+			fmt.Println("📝 No .gitignore file")
+		} else {
+			fmt.Println("🔥 Added", keyPath, "to .gitignore")
+		}
+		fmt.Println("📢 Encryption and decryption will use this key.")
+		return nil
 	},
 }
 
