@@ -33,3 +33,8 @@ decrypt.go
 credentials/
 docs/
 bin/
+.idea
+.vscode
+/internal/test/test_helper.go
+/CHANGELOG.md
+/qodana.yaml
