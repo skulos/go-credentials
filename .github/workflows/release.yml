@@ -34,5 +34,5 @@ jobs:
 
       - name: 🚀 Run release script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTION_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/release.sh
