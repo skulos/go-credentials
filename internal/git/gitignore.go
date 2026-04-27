@@ -1,8 +1,11 @@
 package git
 
 import (
+	"fmt"
 	"os"
 	"strings"
+
+	"github.com/skulos/go-credentials/internal/colours"
 )
 
 // AddIgnoreLine ensures the given path is listed in .gitignore
@@ -29,7 +32,7 @@ func AddIgnoreLine() (bool, error) {
 		defer func(f *os.File) {
 			err := f.Close()
 			if err != nil {
-				// TODO: do something or ignore
+				fmt.Printf("failed to close .gitignore file: %s", colours.WarnColor(err))
 			}
 		}(f)
 		_, err = f.WriteString(line + "\n")
