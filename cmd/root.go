@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -43,11 +43,11 @@ var noArgs = func(cmd *cobra.Command, args []string) error {
 }
 
 var rootCmd = &cobra.Command{
-	Use:           "credentials",
-	Short:         "Manage encrypted credentials",
-	Long:          "A lightweight, Rails-inspired encrypted credentials system for Go.",
-	Version:       version,
-	SilenceErrors: true,
+	Use:   "credentials",
+	Short: "Manage encrypted credentials",
+	Long:  "A lightweight, Rails-inspired encrypted credentials system for Go.",
+	//Version:       version,
+	SilenceErrors: false,
 }
 
 func bootstrap() *cobra.Command {
@@ -75,7 +75,7 @@ func GetEnv() string {
 	return env
 }
 
-func main() {
+func Execute() {
 	bootstrap()
 	//generate()
 	if err := rootCmd.Execute(); err != nil {

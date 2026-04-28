@@ -13,7 +13,7 @@ before:
     - go mod tidy
 
 builds:
-  - main: ./cmd/root.go
+  - main: ./...
     env:
       - CGO_ENABLED=0
     goos:
@@ -24,6 +24,8 @@ builds:
       - arm64
       - amd64
       - "386"
+    ldflags:
+      - -X main.version={{.Version}}
 
 archives:
   - formats: [tar.gz]

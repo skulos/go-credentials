@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"github.com/skulos/go-credentials/internal/commands"
