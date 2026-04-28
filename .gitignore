@@ -38,3 +38,5 @@ bin/
 /internal/test/test_helper.go
 /CHANGELOG.md
 /qodana.yaml
+# Added by goreleaser init:
+dist/

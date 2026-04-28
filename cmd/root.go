@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"fmt"
@@ -75,10 +75,28 @@ func GetEnv() string {
 	return env
 }
 
-func Execute() {
+func main() {
 	bootstrap()
+	//generate()
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
+
+//func generate() {
+//	outputDir := "./docs"
+//	err := os.MkdirAll(outputDir, os.ModePerm)
+//	if err != nil {
+//		fmt.Printf("❌ Failed to create docs directory: %v\n", err)
+//		os.Exit(1)
+//	}
+//
+//	err = doc.GenMarkdownTree(cmd.RootCmd, outputDir) // Replace 'cmd.RootCmd' with your actual root command
+//	if err != nil {
+//		fmt.Printf("❌ Failed to generate docs: %v\n", err)
+//		os.Exit(1)
+//	}
+//
+//	fmt.Printf("✅ Documentation generated at %s\n", outputDir)
+//}
