@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) (string, string, error) {
+func ShowCredentials(keyName, encName, specificKey string, colouredOutput, raw bool) (string, string, error) {
 	keyPath := filepath.Join(".credentials", fmt.Sprintf("%s.key", keyName))
 	encPath := filepath.Join(".credentials", fmt.Sprintf("%s.yml.enc", encName))
 
@@ -45,9 +45,15 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 			}
 			return "", encPath, fmt.Errorf("key %s not found in credentials", specificKey)
 		}
+
+		if raw {
+			return fmt.Sprintf("%v", value), encPath, nil
+		}
+
 		if colouredOutput {
 			return fmt.Sprintf("%s : %v\n", colours.KeyColor(specificKey), colours.ValueColor(value)), encPath, nil
 		}
+
 		return fmt.Sprintf("%s : %v\n", specificKey, value), encPath, nil
 	}
 
@@ -67,7 +73,7 @@ func ShowCredentials(keyName, encName, specificKey string, colouredOutput bool) 
 		return "", encPath, fmt.Errorf("failed to format YAML: %w", err)
 	}
 
-	if colouredOutput {
+	if colouredOutput && !raw {
 		lines := strings.Split(string(yamlBytes), "\n")
 		var b strings.Builder
 		for _, line := range lines {
